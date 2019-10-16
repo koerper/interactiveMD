@@ -1,3 +1,4 @@
 # interactiveMD
 
-I adapted the code of Daniel V. Schroeder to implement periodic boundary conditions.
+Adaptation of the "Interactive Molecular Dynamics" code written by Daniel V. Schroeder. This patch includes an extra checkbox that allows enabling periodic boundary conditions (PBCs).
+
