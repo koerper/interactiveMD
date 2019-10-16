@@ -719,10 +719,7 @@ information about the world, if just a little imagination and thinking are appli
 	function computeAccelerations() {
 
 		var dx, dy, dx2, dy2, r, rSquared, rSquaredInv, attract, repel, fOverR, fx, fy;
-		// if (dtPBC.checked) {
 		var forceCutoff = 3.0; 					// distance beyond which we set force=0
-		// } else
-		// 	var forceCutoff = 3.0;
 		var forceCutoff2 = forceCutoff*forceCutoff;
 		var pEatCutoff = 4 * (Math.pow(forceCutoff,-12) - Math.pow(forceCutoff,-6));
 		var g = Number(getGravity());
@@ -813,18 +810,15 @@ information about the world, if just a little imagination and thinking are appli
 			var linkedList = new Array(N);		// element i will point to next atom in same cell
 			for (var i=0; i<N; i++) {			// this loop assembles the linked list of atoms by cell
 				xCell = Math.floor(x[i] / cellWidth);		// figure out which cell the atom is in
+				yCell = Math.floor(y[i] / cellWidth);
 				if (dtPBC.checked) {
 					if (xCell < 0) xCell = nCells - 1;
 					if (xCell >= nCells) xCell = 0;
+					if (yCell < 0) yCell = nCells - 1;
+					if (yCell >= nCells) yCell = 0;	
 				} else {	
 					if (xCell < 0) xCell = 0;
 					if (xCell >= nCells) xCell = nCells - 1;
-				}
-				yCell = Math.floor(y[i] / cellWidth);
-				if (dtPBC.checked) {
-					if (yCell < 0) yCell = nCells - 1;
-					if (yCell >= nCells) yCell = 0;	
-				} else {
 					if (yCell < 0) yCell = 0;
 					if (yCell >= nCells) yCell = nCells - 1;
 				}
