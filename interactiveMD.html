@@ -581,6 +581,7 @@ information about the world, if just a little imagination and thinking are appli
 	var kineticE, potentialE, gravitationalE;	// energies
 	var averageT = 0, averageP = 0;				// temperature and pressure averaged over time
 	var pressure;								// instantaneous P, computed each step
+	var rf = 0;
 	var totalT, totalP, sampleCount;			// variables for computing average T and P
 	var lastSampleTime = 0;						// simulation time when T and P were last sampled
 	var lastAutoRecordTime = 0;					// used for auto-recording data at regular intervals
@@ -735,6 +736,7 @@ information about the world, if just a little imagination and thinking are appli
 				y[i] = y[i] - Math.floor(y[i] / boxWidth) * boxWidth
 				ax[i] = 0.0; 
 				ay[i] = 0.0;
+				rf = 0.0;
 			}
 		} else {
 			// first check for bounces off walls:
@@ -795,6 +797,9 @@ information about the world, if just a little imagination and thinking are appli
 								ay[i] += fy;
 								ax[j] -= fx;  // Newton's 3rd law
 								ay[j] -= fy;
+								if (dtPBC.checked) {
+									rf += dx * fx + dy * fy;
+								}
 							}
 						}
 					}
@@ -874,6 +879,9 @@ information about the world, if just a little imagination and thinking are appli
 											ay[i] += fy;
 											ax[j] -= fx;  // Newton's 3rd law
 											ay[j] -= fy;
+											if (dtPBC.checked) {
+												rf += dx * fx + dy * fy;
+											}
 										}
 									}
 								}
@@ -948,8 +956,15 @@ information about the world, if just a little imagination and thinking are appli
 			totalT += currentT;
 			safetyCheck(currentT);
 			averageT = totalT / sampleCount;
-			totalP += pressure;
-			averageP = totalP / sampleCount;
+			if (dtPBC.checked) {
+				var currentP = N * averageT / (boxWidth * boxWidth) + 1 / (4 * boxWidth * boxWidth) * rf;
+				totalP += currentP;
+				averageP = totalP / sampleCount;
+				// totalP = rf;
+			} else {
+				totalP += pressure;
+				averageP = totalP / sampleCount;
+			}
 			lastSampleTime += sampleInterval;
 		}
 	}
